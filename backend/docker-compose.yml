@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-idd}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-idd}
+      POSTGRES_DB: ${POSTGRES_DB:-idd}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-idd} -d ${POSTGRES_DB:-idd}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-idd}:${POSTGRES_PASSWORD:-idd}@db:5432/${POSTGRES_DB:-idd}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      SCORING_CONFIG_PATH: /app/scoring_config.yaml
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./scripts/fixtures:/app/scripts/fixtures:ro
+
+volumes:
+  db_data:
