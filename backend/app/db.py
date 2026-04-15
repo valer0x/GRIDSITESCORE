@@ -14,8 +14,9 @@ engine = create_async_engine(
     _settings.database_url,
     echo=False,
     pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
+    pool_size=20,      # up to 20 idle connections; each /analyze uses 4
+    max_overflow=20,   # + burst of 20 more under heatmap parallelism
+    pool_recycle=1800,
 )
 
 SessionLocal = async_sessionmaker(

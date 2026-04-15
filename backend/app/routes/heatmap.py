@@ -20,7 +20,6 @@ from cachetools import TTLCache
 from fastapi import APIRouter, HTTPException, Query
 
 from app.config import get_settings
-from app.db import SessionLocal
 from app.services.orchestrator import analyze_point
 
 router = APIRouter(prefix="/heatmap", tags=["heatmap"])
@@ -71,16 +70,16 @@ async def _analyze_one(
     sem: asyncio.Semaphore, lat: float, lng: float
 ) -> dict:
     async with sem:
-        async with SessionLocal() as session:
-            try:
-                resp = await analyze_point(session, lat, lng)
-                return {
-                    "lat": round(lat, 4),
-                    "lng": round(lng, 4),
-                    "score": resp.score.total,
-                }
-            except Exception:
-                return {"lat": round(lat, 4), "lng": round(lng, 4), "score": None}
+        try:
+            # Orchestrator manages its own per-service sessions.
+            resp = await analyze_point(None, lat, lng)
+            return {
+                "lat": round(lat, 4),
+                "lng": round(lng, 4),
+                "score": resp.score.total,
+            }
+        except Exception:
+            return {"lat": round(lat, 4), "lng": round(lng, 4), "score": None}
 
 
 @router.get("")

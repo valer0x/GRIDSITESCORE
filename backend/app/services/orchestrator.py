@@ -1,9 +1,9 @@
+import asyncio
 import time
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.cache import get_cached, set_cached
 from app.config import get_settings
+from app.db import SessionLocal
 from app.logging_conf import get_logger
 from app.models.schemas import AnalysisResponse, LatLng
 from app.services.digital import compute_digital
@@ -15,9 +15,21 @@ from app.services.scoring import compute_score, load_config
 log = get_logger(__name__)
 
 
+async def _with_session(coro_factory, lat: float, lng: float):
+    """Run one service on a dedicated AsyncSession so the four can run
+    in parallel. A single AsyncSession can't be shared across concurrent
+    statements — asyncpg raises. Opening a session per service and
+    letting the pool reuse connections is the cheapest fix."""
+    async with SessionLocal() as session:
+        return await coro_factory(session, lat, lng)
+
+
 async def analyze_point(
-    session: AsyncSession, lat: float, lng: float
+    _session_unused, lat: float, lng: float
 ) -> AnalysisResponse:
+    """The `_session_unused` parameter is kept for call-site compatibility
+    with the per-request Depends(get_session) pattern, but we open our
+    own sessions so we can run the four services concurrently."""
     cached = get_cached(lat, lng)
     if cached is not None:
         log.info("analyze.cache_hit", lat=lat, lng=lng)
@@ -25,11 +37,12 @@ async def analyze_point(
 
     t0 = time.perf_counter()
 
-    # AsyncSession is single-connection; statements must be serialized.
-    grid = await compute_grid_access(session, lat, lng)
-    energy = await compute_energy(session, lat, lng)
-    digital = await compute_digital(session, lat, lng)
-    resilience = await compute_resilience(session, lat, lng)
+    grid, energy, digital, resilience = await asyncio.gather(
+        _with_session(compute_grid_access, lat, lng),
+        _with_session(compute_energy, lat, lng),
+        _with_session(compute_digital, lat, lng),
+        _with_session(compute_resilience, lat, lng),
+    )
 
     config = load_config(get_settings().scoring_config_path)
     score = compute_score(config, grid, energy, digital, resilience)
