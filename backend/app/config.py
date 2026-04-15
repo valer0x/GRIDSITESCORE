@@ -19,6 +19,7 @@ class Settings(BaseSettings):
         default=str(Path(__file__).resolve().parents[1] / "scoring_config.yaml"),
         alias="SCORING_CONFIG_PATH",
     )
+    cors_allow_origins: str = Field(default="*", alias="CORS_ALLOW_ORIGINS")
 
     radii_meters: tuple[int, ...] = (10_000, 50_000, 100_000)
     resilience_graph_radius_m: int = 100_000

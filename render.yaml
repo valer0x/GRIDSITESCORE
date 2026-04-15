@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: gridsitescore-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false           # set manually in Render dashboard (Supabase URI)
+      - key: CORS_ALLOW_ORIGINS
+        sync: false           # set to the Vercel URL after frontend deploy
+      - key: LOG_LEVEL
+        value: INFO
+      - key: CACHE_TTL_SECONDS
+        value: "3600"
+      - key: SCORING_CONFIG_PATH
+        value: /app/scoring_config.yaml
