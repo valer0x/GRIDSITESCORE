@@ -1,5 +1,6 @@
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import L from "leaflet";
+import FeaturesLayer from "./FeaturesLayer";
 
 // Fix the broken default icon paths under bundlers.
 const defaultIcon = L.icon({
@@ -39,6 +40,7 @@ export default function MapView({ point, onPick }: Props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <FeaturesLayer />
       <ClickCapture onPick={onPick} />
       {point && <Marker position={[point.lat, point.lng]} />}
     </MapContainer>

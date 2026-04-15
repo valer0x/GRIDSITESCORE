@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.logging_conf import configure_logging, get_logger
-from app.routes import analyze, health
+from app.routes import analyze, features, health
 
 configure_logging()
 log = get_logger(__name__)
@@ -40,12 +40,22 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(analyze.router)
+app.include_router(features.router)
 
 
 @app.get("/")
 async def root() -> dict:
     return {
-        "name": "Infrastructure Due Diligence Tool",
+        "name": "GridSiteScore",
         "docs": "/docs",
-        "endpoints": ["/health", "/analyze?lat=&lng=", "/analyze/batch"],
+        "endpoints": [
+            "/health",
+            "/analyze?lat=&lng=",
+            "/analyze/batch",
+            "/analyze/report.pdf?lat=&lng=",
+            "/features/substations?bbox=",
+            "/features/transmission_lines?bbox=",
+            "/features/power_plants?bbox=",
+            "/features/data_centers",
+        ],
     }

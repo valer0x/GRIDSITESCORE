@@ -36,6 +36,20 @@ export default function App() {
       <div className="layout">
         <div className="map-wrap">
           <MapView point={point} onPick={handlePick} />
+          <div className="legend">
+            <div className="legend-title">Legend</div>
+            <div className="legend-row"><span className="sw line380" /> ≥ 380 kV line</div>
+            <div className="legend-row"><span className="sw line220" /> ≥ 220 kV line</div>
+            <div className="legend-row"><span className="sw line110" /> 110 kV line</div>
+            <div className="legend-row"><span className="sw sub" /> Substation</div>
+            <div className="legend-row"><span className="sw plant-gas" /> Gas / oil plant</div>
+            <div className="legend-row"><span className="sw plant-solar" /> Solar</div>
+            <div className="legend-row"><span className="sw plant-wind" /> Wind</div>
+            <div className="legend-row"><span className="sw plant-hydro" /> Hydro</div>
+            <div className="legend-row"><span className="sw plant-nuclear" /> Nuclear</div>
+            <div className="legend-row"><span className="sw dc" /> Data center</div>
+            <div className="legend-note">Zoom in to load HV details</div>
+          </div>
         </div>
         <aside className="panel">
           <ScorePanel data={data} loading={loading} error={error} />

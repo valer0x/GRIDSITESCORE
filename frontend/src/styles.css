@@ -39,7 +39,50 @@ body {
   min-height: 0;
 }
 
-.map-wrap { height: 100%; }
+.map-wrap { height: 100%; position: relative; }
+
+.legend {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 500;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 11px;
+  color: var(--text);
+  line-height: 1.5;
+  min-width: 160px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+.legend-title {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.legend-row { display: flex; align-items: center; gap: 6px; }
+.legend-note { color: var(--muted); font-size: 10px; margin-top: 6px; font-style: italic; }
+.legend .sw {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.legend .line380 { background: #ef4444; height: 3px; }
+.legend .line220 { background: #f59e0b; height: 2.5px; }
+.legend .line110 { background: #facc15; height: 2px; }
+.legend .sub { background: #ef4444; border-radius: 50%; width: 8px; height: 8px; }
+.legend .plant-gas { background: #f87171; border-radius: 50%; }
+.legend .plant-solar { background: #fbbf24; border-radius: 50%; }
+.legend .plant-wind { background: #38bdf8; border-radius: 50%; }
+.legend .plant-hydro { background: #2dd4bf; border-radius: 50%; }
+.legend .plant-nuclear { background: #a855f7; border-radius: 50%; }
+.legend .dc { background: #a855f7; border: 1.5px solid #0f172a; border-radius: 50%; }
 
 .panel {
   background: var(--panel);
