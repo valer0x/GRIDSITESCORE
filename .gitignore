@@ -34,7 +34,7 @@ backend/scripts/fixtures/*.zip
 
 # Build artifacts
 *.pdf
-!A_Global_Database_of_Power_Plants.pdf
+!docs/sample-report.pdf
 
 # Logs
 *.log

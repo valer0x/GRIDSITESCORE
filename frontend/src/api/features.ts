@@ -98,3 +98,24 @@ export function fetchDataCenters(opts: { signal?: AbortSignal } = {}) {
     opts.signal
   );
 }
+
+export interface HeatmapCell {
+  lat: number;
+  lng: number;
+  score: number | null;
+}
+export interface HeatmapResponse {
+  bbox: [number, number, number, number];
+  n: number;
+  cells: HeatmapCell[];
+  cell_size_deg: { lng: number; lat: number };
+  cache_hit: boolean;
+}
+
+export function fetchHeatmap(
+  bbox: string,
+  n: number,
+  signal?: AbortSignal
+): Promise<HeatmapResponse> {
+  return fetchJson<HeatmapResponse>(`/heatmap?bbox=${bbox}&n=${n}`, signal);
+}

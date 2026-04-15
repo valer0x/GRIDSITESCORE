@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.logging_conf import configure_logging, get_logger
-from app.routes import analyze, features, health
+from app.routes import analyze, features, health, heatmap
 
 configure_logging()
 log = get_logger(__name__)
@@ -41,6 +41,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(analyze.router)
 app.include_router(features.router)
+app.include_router(heatmap.router)
 
 
 @app.get("/")
@@ -57,5 +58,6 @@ async def root() -> dict:
             "/features/transmission_lines?bbox=",
             "/features/power_plants?bbox=",
             "/features/data_centers",
+            "/heatmap?bbox=&n=",
         ],
     }
