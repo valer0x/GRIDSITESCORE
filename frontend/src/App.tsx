@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MapView from "./components/MapView";
 import ScorePanel from "./components/ScorePanel";
+import { IconLogo } from "./components/Icons";
 import { analyze } from "./api/analyze";
 import type { AnalysisResponse } from "./api/types";
 
@@ -28,9 +29,24 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <div>
-          <h1>Infrastructure Due Diligence</h1>
-          <span className="subtitle">Early-stage site analysis · Italy + neighbors</span>
+        <div className="brand">
+          <IconLogo size={26} />
+          <div className="brand-text">
+            <div className="brand-name">
+              Grid<span>Site</span>Score
+            </div>
+            <div className="brand-sub">Infrastructure due-diligence · IT + EU grid</div>
+          </div>
+        </div>
+        <div className="header-meta">
+          <a
+            href="https://github.com/valer0x/GRIDSITESCORE"
+            target="_blank"
+            rel="noreferrer"
+            className="gh-link"
+          >
+            GitHub ↗
+          </a>
         </div>
       </header>
       <div className="layout">
@@ -41,7 +57,7 @@ export default function App() {
             <div className="legend-row"><span className="sw line380" /> ≥ 380 kV line</div>
             <div className="legend-row"><span className="sw line220" /> ≥ 220 kV line</div>
             <div className="legend-row"><span className="sw line110" /> 110 kV line</div>
-            <div className="legend-row"><span className="sw sub" /> Substation</div>
+            <div className="legend-row"><span className="sw sub" /> Substation (HV)</div>
             <div className="legend-row"><span className="sw plant-gas" /> Gas / oil plant</div>
             <div className="legend-row"><span className="sw plant-solar" /> Solar</div>
             <div className="legend-row"><span className="sw plant-wind" /> Wind</div>
